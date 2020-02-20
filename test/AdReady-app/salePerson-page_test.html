@@ -23,7 +23,6 @@
 
     describe('SalesPerson Page', function () {
       var element = fixture('SalesPersonFixture');
-      debugger;
       var elementShadowRoot = element.shadowRoot;
       describe('When the component is rendered', function () {
         beforeEach(function () {
@@ -105,10 +104,9 @@
 
         it('should respond with correct response', function (done) {
           ajax = elementShadowRoot.querySelector("iron-ajax");
-
           request = ajax.generateRequest();
           server.respondWith(
-            'POST',
+            'GET',
             'http://localhost:3000/users', [
             200,
             responseHeaders.json,
@@ -116,15 +114,15 @@
           ]
           );
           flush(function () {
-            console.log(request);
-            // expect(request.response).to.be.ok;
-            // expect(request.response).to.be.equal('object');
+            console.log(responseHeaders);
+            expect(responseHeaders).to.be.ok;
+            // expect(responseHeaders).to.be.equal('json');
 
             server.respond();
             done();
           });
 
-          // expect(request.response.success).to.be.equal(true);
+          expect(responseHeaders.success).to.be.equal(true);
 
 
         });

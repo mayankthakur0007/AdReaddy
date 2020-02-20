@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
   <title>AdReady-app test</title>
-
   <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../../node_modules/@polymer/test-fixture/test-fixture.js"></script>
   <script src="../../node_modules/mocha/mocha.js"></script>
   <script src="../../node_modules/chai/chai.js"></script>
+  <script src="../../node_modules/sinon/pkg/sinon.js"></script>
   <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
 
   <script type="module" src="../../src/AdReady-app/my-bookings.js"></script>
@@ -20,7 +20,11 @@
 </head>
 
 <body>
-
+    <test-fixture id="simple-get">
+        <template>
+          <iron-ajax url="http://localhost:3000/users"></iron-ajax>
+        </template>
+      </test-fixture>
   <test-fixture id="MyBookingTestFixture">
     <template>
       <my-bookings></my-bookings>
@@ -49,7 +53,7 @@
           expect(ironAjax).to.be.exist;
           expect(ironAjax).to.not.null;
         });
-        
+
         it('should render the back button', () => {
           let loginBtn = elementShadowRoot.querySelector('#back')
           expect(loginBtn).to.be.exist;
@@ -62,12 +66,73 @@
 
         });
 
+        describe('AND When select button is clicked', function () {
+        let loginSpy, loginStub;
+        var ajax;
+        var request;
+        var server;
+        var responseHeaders = {
+          users: { 'name': 'mayank' }
+        };
+
+        beforeEach(function () {
+          loginStub = sinon.spy();
+          server = sinon.fakeServer.create();
+
+        });
+
+        afterEach(function () {
+          server.restore();
+        })
+
+        it('should call loginStub()', function (done) {
+          let btn = elementShadowRoot.querySelector('paper-button');
+          btn.addEventListener('click', loginStub);
+          element.phone = '1234567890';
+          element.password = 'start@123'
+          element.action = 'list';
+
+          flush(function () {
+            btn.click();
+            expect(loginStub.callCount).to.be.equal(1);
+            done();
+          });
+        });
+
+        it('should respond with correct response', function (done) {
+          ajax = elementShadowRoot.querySelector("iron-ajax");
+          request = ajax.generateRequest();
+          // response = ajax.on-response;
+          server.respondWith(
+            'GET',
+            'http://localhost:3000/users', [
+            200,
+            responseHeaders.users,
+            'true'
+          ] 
+
+          );
+          flush(function () {
+            console.log( responseHeaders.users);
+            expect(responseHeaders.users).to.be.ok;
+            expect(responseHeaders.users).to.be.equal(responseHeaders.users);
+
+            server.respond();
+            done();
+          });
+
+          expect(responseHeaders.success).to.be.equal(true);
+
+
+        });
+
 
       })
+      })
 
-      
 
- 
+
+
     });
 
 

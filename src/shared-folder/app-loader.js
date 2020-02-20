@@ -1,6 +1,7 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/paper-progress/paper-progress.js';
+
 /**
 * @customElement
 * @polymer
@@ -13,8 +14,9 @@ class AppLoader extends PolymerElement {
       display: block;
 
     }
-    paper-spinner-lite.thick {
-        --paper-spinner-stroke-width: 6px;
+    paper-progress {
+        --paper-progress-active-color:red;
+        --paper-progress-container-color:yellow;
       }
    
     </style>

@@ -56,7 +56,7 @@ class MyBookings extends PolymerElement {
 <iron-ajax id="ajax" handle-as="json" on-response="_handleResponse" content-type="application/json"
     on-error="_handleError"></iron-ajax>
 <div id="container">
-<paper-button raised on-click="myBookings">Back</paper-button>
+<paper-button raised on-click="myBookings" id="back">Back</paper-button>
     <h1>My Bookings</h1>
     <table-element slots-available={{slotsAvailable}} headings-given={{headingsGiven}}></table-element>
 </div>
